@@ -1,0 +1,26 @@
+﻿@model IEnumerable<CarRentalProject.Models.ServiceType>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<div>
+    <table class="table">
+        <tr>
+            <th>Name</th>   
+        </tr>
+
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@c.Name</td>
+                <td>
+                    @Html.ActionLink("Edit", "CustForm", c, new { @class = "btn btn-success", style = "color: white; text-decoration:none" })
+                    <button class="btn btn-primary">@Html.ActionLink("View Car", "CustAndCarForm", c, new { @style = "color: white; text-decoration:none" })</button>
+                    <button class="btn btn-danger">@Html.ActionLink("Delete", "Delete", new { c.Id }, new { @style = "color: white; text-decoration:none" })</button>
+                </td>
+            </tr>
+        }
+    </table>
+</div>

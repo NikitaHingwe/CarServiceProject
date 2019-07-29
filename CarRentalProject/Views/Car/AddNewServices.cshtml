@@ -1,0 +1,99 @@
+﻿@model CarRentalProject.ViewModel.CarAndServiceViewModel
+@{
+    ViewBag.Title = "AddNewServices";
+}
+
+<h3>Car Record for Customer</h3>
+
+    <div class="form-group">
+        <table class="table text-center">
+            <tr>
+                <td>@Html.LabelFor(m => m.Car.Make)</td>
+                <td>@Html.TextBoxFor(m => m.Car.Make, new { @class = "form-control", @readonly = "readonly" })</td>
+
+                <td>@Html.LabelFor(m => m.Car.Style)</td>
+                <td>@Html.TextBoxFor(m => m.Car.Style, new { @class = "form-control", @readonly = "readonly" })</td>
+            </tr>
+
+            <tr>
+                <td>@Html.LabelFor(m => m.Car.Model)</td>
+                <td>@Html.TextBoxFor(m => m.Car.Model, new { @class = "form-control", @readonly = "readonly" })</td>
+
+
+                <td>@Html.LabelFor(m => m.Car.Year)</td>
+                <td>@Html.TextBoxFor(m => m.Car.Year, new { @class = "form-control", @readonly = "readonly" })</td>
+            </tr>
+        </table>
+        <hr />
+        <br />
+    </div>
+
+
+
+<h3>Services</h3>
+
+@using (Html.BeginForm("AddServices", "Car"))
+{
+  
+<div class="form-group">
+    <table class="table text-center">
+        <tr>
+            <td>@Html.LabelFor(m => m.Service.Miles)</td>
+            <td>@Html.TextBoxFor(m => m.Service.Miles, new { @class = "form-control" })</td>
+
+            <td>@Html.LabelFor(m => m.Service.Details)</td>
+            <td>@Html.TextBoxFor(m => m.Service.Details, new { @class = "form-control" })</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Service.Price)</td>
+            <td>@Html.TextBoxFor(m => m.Service.Price, new { @class = "form-control" })</td>
+
+            <td>@Html.LabelFor(m => m.Service.ServiceTypeId)</td>
+            <td>
+                @Html.DropDownListFor(m => m.Service.ServiceTypeId,
+                     new SelectList(Model.ServiceType, "Id", "Name"),
+                     "Select Service Type",
+                     new { @class = "form-control" })
+            </td>
+        </tr>
+    </table>
+    <hr />
+    @Html.HiddenFor(m => m.Car.Id)
+    <button class="btn btn-primary" style="color: white; text-decoration:none" type="submit">Add New Service</button>
+    <br />
+    <br />
+</div>   
+}
+
+<h3>Past Service Records</h3>
+
+    <table class="table">
+        <tr>
+            <th>Miles</th>
+            <th>Price</th>
+            <th>Details</th>
+            <th>Date Added</th>
+            <th>Service Name</th>
+            <th></th>
+        </tr>
+
+        @if (!Model.Services.Any())
+        {
+            <tr><td>No Services Found</td></tr>
+        }
+
+        @foreach (var c in Model.Services)
+        {
+            <tr>
+                <td>@c.Miles</td>
+                <td>@c.Price</td>
+                <td>@c.Details</td>
+                <td>@c.DateAdded</td>
+                <td>@c.ServiceType.Name</td>
+                <td><button class="btn btn-danger">@Html.ActionLink("Delete", "Delete1", new { c.Id }, new { @style = "color: white; text-decoration:none" })</button></td>
+            </tr>
+        }
+    </table>
+    @*@Html.ActionLink("Back To List", "CustAndCarForm", "Customer",Model.customer, new { @class = "btn btn-success", style = "color: white; text-decoration:none" })*@
+
+

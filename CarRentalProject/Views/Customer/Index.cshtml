@@ -1,0 +1,66 @@
+﻿@model CarRentalProject.ViewModel.SearchBarViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div style=" width:150px">
+    <h2>Customers</h2>
+</div>
+<button class="btn btn-primary">@Html.ActionLink("Create New Customer", "CustForm", null, new { @style = "color: white; text-decoration:none" })</button>
+<div style="float:right">
+    @using (Html.BeginForm("Index", "Customer", FormMethod.Get))
+    {
+        <p>
+            Search By:
+            @Html.RadioButton("option", "First name")Name
+            @Html.RadioButton("option", "Email")Email
+            @Html.RadioButton("option", "PhoneNumber")Phone Number
+        </p>
+
+        <p>
+            @Html.TextBox("Search")
+            <button class="btn btn-primary" type="submit">Search</button>
+        </p>
+
+    }
+    <br />
+    <br />
+    <br />
+</div>
+
+
+
+@if (!Model.Customers.Any())
+{
+    <h4>No Customer Found</h4>}
+
+else
+{ 
+    <table class="table">
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+            <th></th>
+
+        </tr>
+        @foreach (var c in Model.Customers)
+        {
+        <tr>
+            <td>@c.FirstName</td>
+            <td>@c.LastName</td>
+            <td>@c.PhoneNumber</td>
+            <td>@c.Email</td>
+
+            <td class="col-md-3">
+                @Html.ActionLink("Edit", "CustForm", c, new { @class = "btn btn-success", style = "color: white; text-decoration:none" })
+                @Html.ActionLink("View Car", "CustAndCarForm", c, new { @class = "btn btn-primary", @style = "color: white; text-decoration:none" })
+                @Html.ActionLink("Delete", "Delete", new { c.Id }, new { @class = "btn btn-danger", @style = "color: white; text-decoration:none" })
+            </td>
+        </tr>
+        }
+    </table>
+
+}
