@@ -1,66 +1,91 @@
-﻿@model CarRentalProject.ViewModel.SearchBarViewModel
+﻿@*@model CarRentalProject.ViewModel.SearchBarViewModel*@
+@model IEnumerable<CarRentalProject.Models.ApplicationUser>
 @{
     ViewBag.Title = "Index";
 }
 
-
-<div style=" width:150px">
-    <h2>Customers</h2>
-</div>
-<button class="btn btn-primary">@Html.ActionLink("Create New Customer", "CustForm", null, new { @style = "color: white; text-decoration:none" })</button>
-<div style="float:right">
-    @using (Html.BeginForm("Index", "Customer", FormMethod.Get))
-    {
-        <p>
-            Search By:
-            @Html.RadioButton("option", "First name")Name
-            @Html.RadioButton("option", "Email")Email
-            @Html.RadioButton("option", "PhoneNumber")Phone Number
-        </p>
-
-        <p>
-            @Html.TextBox("Search")
-            <button class="btn btn-primary" type="submit">Search</button>
-        </p>
-
-    }
-    <br />
-    <br />
-    <br />
-</div>
-
-
-
-@if (!Model.Customers.Any())
-{
-    <h4>No Customer Found</h4>}
-
-else
-{ 
-    <table class="table">
-        <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Phone Number</th>
-            <th>Email</th>
-            <th></th>
-
-        </tr>
-        @foreach (var c in Model.Customers)
-        {
-        <tr>
-            <td>@c.FirstName</td>
-            <td>@c.LastName</td>
-            <td>@c.PhoneNumber</td>
-            <td>@c.Email</td>
-
-            <td class="col-md-3">
-                @Html.ActionLink("Edit", "CustForm", c, new { @class = "btn btn-success", style = "color: white; text-decoration:none" })
-                @Html.ActionLink("View Car", "CustAndCarForm", c, new { @class = "btn btn-primary", @style = "color: white; text-decoration:none" })
-                @Html.ActionLink("Delete", "Delete", new { c.Id }, new { @class = "btn btn-danger", @style = "color: white; text-decoration:none" })
-            </td>
-        </tr>
-        }
-    </table>
-
+@section customerpage {
+    <link href="@Url.Content("~/Content/customerBgImage.css")" rel="stylesheet" />
 }
+
+
+    <div class="container">
+        <div style=" width:150px">
+            <h2 style="color:white; font-family:'Times New Roman', Times, serif">Customers</h2>
+        </div>
+
+        @Html.ActionLink("Create New Customer","CustForm", null, new { @class = "btn btn-primary", @style = "color: white; text-decoration:none" })
+
+        <div style="float:right; color:white; font-family:'Times New Roman', Times, serif">
+            @using (Html.BeginForm("Index", "Customer", FormMethod.Get))
+            {
+                <p>
+                    Search By:
+                    @Html.RadioButton("option", "First name")Name
+                    @Html.RadioButton("option", "Email")Email
+                    @Html.RadioButton("option", "PhoneNumber")Phone Number
+                </p>
+
+                <p>
+                    @*@Html.TextBox("Search")*@
+                    @*<button class="btn btn-primary" type="submit">Search</button>*@
+                </p>
+
+                <p>
+                    @Html.TextBox("Search")
+                    <button class="btn btn-primary" type="submit">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    <button class="btn btn-primary" type="submit">
+                        <span class="glyphicon glyphicon-search"></span> Search
+                    </button>
+                </p>
+              }
+            <br />
+            <br />
+            <br />
+        </div>
+    </div>
+
+
+@*@if (Model.CheckInteger == 1)
+{
+    <h4 style="color:white; font-family:'Times New Roman', Times, serif">Invaild Input</h4>
+}*@
+
+@*else if (!Model.Customers.Any())
+{
+    <h4 style="color:white; font-family:'Times New Roman', Times, serif">No Customer Found</h4>
+}*@
+
+@*else
+{*@
+    <div class="container">
+        <table class="table table-hover" style="background-color:aliceblue; font-family:'Times New Roman', Times, serif">
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>City</th>
+                <th></th>
+            </tr>
+           @foreach(var c in Model)
+            {
+                <tr>
+                    <td>@c.FirstName</td>
+                    <td>@c.LastName</td>
+                    <td>@c.PhoneNumber</td>
+                    <td>@c.Email</td>
+                    <td>@c.City</td>
+                    <td class="col-md-3">
+                        @Html.ActionLink("Edit", "Edit", new {c.Id }, new { @class = "btn btn-success", style = "color: white; text-decoration:none" })
+                        @Html.ActionLink("View Car", "CustAndCarForm", c, new { @class = "btn btn-primary", @style = "color: white; text-decoration:none" })
+                        @Html.ActionLink(" ", "Delete",c, new { @class = "btn btn-danger fa fa-trash-o", @style = "color: black" })
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+@*}*@
+

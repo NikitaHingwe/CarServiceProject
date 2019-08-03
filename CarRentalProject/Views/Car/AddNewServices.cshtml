@@ -2,11 +2,12 @@
 @{
     ViewBag.Title = "AddNewServices";
 }
+<div class="container">
 
-<h3>Car Record for Customer</h3>
+    <h3 style="color:white; font-family:'Times New Roman', Times, serif">Car Record for Customer</h3>
 
     <div class="form-group">
-        <table class="table text-center">
+        <table class="table table-hover" style="background-color:aliceblue; font-family:'Times New Roman', Times, serif">
             <tr>
                 <td>@Html.LabelFor(m => m.Car.Make)</td>
                 <td>@Html.TextBoxFor(m => m.Car.Make, new { @class = "form-control", @readonly = "readonly" })</td>
@@ -24,57 +25,68 @@
                 <td>@Html.TextBoxFor(m => m.Car.Year, new { @class = "form-control", @readonly = "readonly" })</td>
             </tr>
         </table>
-        <hr />
         <br />
     </div>
 
 
 
-<h3>Services</h3>
+    <h3 style="color:white; font-family:'Times New Roman', Times, serif">Services</h3>
 
-@using (Html.BeginForm("AddServices", "Car"))
-{
-  
-<div class="form-group">
-    <table class="table text-center">
-        <tr>
-            <td>@Html.LabelFor(m => m.Service.Miles)</td>
-            <td>@Html.TextBoxFor(m => m.Service.Miles, new { @class = "form-control" })</td>
+    @using (Html.BeginForm("AddServices", "Car"))
+    {
 
-            <td>@Html.LabelFor(m => m.Service.Details)</td>
-            <td>@Html.TextBoxFor(m => m.Service.Details, new { @class = "form-control" })</td>
-        </tr>
-        <tr>
-            <td>@Html.LabelFor(m => m.Service.Price)</td>
-            <td>@Html.TextBoxFor(m => m.Service.Price, new { @class = "form-control" })</td>
+        <div class="form-group">
+            <table class="table table-hover" style="background-color:aliceblue; font-family:'Times New Roman', Times, serif">
 
-            <td>@Html.LabelFor(m => m.Service.ServiceTypeId)</td>
-            <td>
-                @Html.DropDownListFor(m => m.Service.ServiceTypeId,
-                     new SelectList(Model.ServiceType, "Id", "Name"),
-                     "Select Service Type",
-                     new { @class = "form-control" })
-            </td>
-        </tr>
-    </table>
-    <hr />
-    @Html.HiddenFor(m => m.Car.Id)
-    <button class="btn btn-primary" style="color: white; text-decoration:none" type="submit">Add New Service</button>
-    <br />
-    <br />
-</div>   
-}
+                <tr>
+                    <td>@Html.LabelFor(m => m.Service.Miles)</td>
+                    <td>@Html.TextBoxFor(m => m.Service.Miles, new { @class = "form-control" })</td>
+                    <td>@Html.ValidationMessageFor(m => m.Service.Miles)</td>
 
-<h3>Past Service Records</h3>
+                    <td>@Html.LabelFor(m => m.Service.Details)</td>
+                    <td>@Html.TextBoxFor(m => m.Service.Details, new { @class = "form-control" })</td>
+                    <td>@Html.ValidationMessageFor(m => m.Service.Details)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Service.Price)</td>
+                    <td>@Html.TextBoxFor(m => m.Service.Price, new { @class = "form-control" })</td>
+                    <td>@Html.ValidationMessageFor(m => m.Service.Price)</td>
 
-    <table class="table">
+                    <td>@Html.LabelFor(m => m.Service.ServiceTypeId)</td>
+                    <td>
+                        @Html.DropDownListFor(m => m.Service.ServiceTypeId,
+                                                        new SelectList(Model.ServiceType, "Id", "Name"),
+                                                        "Select Service Type",
+                                                        new { @class = "form-control" })
+                    </td>
+
+
+                    @*<td>@Html.ValidationMessageFor(m => m.Service.ServiceType)</td>*@
+                </tr>
+            </table>
+
+            @Html.HiddenFor(m => m.Car.Id)
+            @Html.HiddenFor(m => m.Car.Make)
+            @Html.HiddenFor(m => m.Car.Model)
+            @Html.HiddenFor(m => m.Car.Style)
+            @Html.HiddenFor(m => m.Car.VIN)
+            @Html.HiddenFor(m => m.Car.Color)
+            <button class="btn btn-primary" style="color: white; text-decoration:none" type="submit">Add New Service</button>
+            <br />
+            <br />
+            @*@Html.ValidationSummary("", new { @class = "form-control" })*@
+        </div>
+    }
+
+    <h3 style="color:white; font-family:'Times New Roman', Times, serif">Past Service Records</h3>
+
+    <table class="table table-hover" style="background-color:aliceblue; font-family:'Times New Roman', Times, serif">
         <tr>
             <th>Miles</th>
             <th>Price</th>
             <th>Details</th>
             <th>Date Added</th>
             <th>Service Name</th>
-            <th></th>
         </tr>
 
         @if (!Model.Services.Any())
@@ -88,12 +100,19 @@
                 <td>@c.Miles</td>
                 <td>@c.Price</td>
                 <td>@c.Details</td>
-                <td>@c.DateAdded</td>
+                <td>@c.DateAdded.ToShortDateString()</td>
                 <td>@c.ServiceType.Name</td>
-                <td><button class="btn btn-danger">@Html.ActionLink("Delete", "Delete1", new { c.Id }, new { @style = "color: white; text-decoration:none" })</button></td>
+                @if (c.DateAdded == DateTime.Today)
+                {
+                    <td>@Html.ActionLink("Delete", "Delete1", new { c.Id }, new { @class = "btn btn-danger", @style = "color: white; text-decoration:none" })</td>
+                }
             </tr>
         }
+        <tr>@Html.ActionLink("Show Less", "ShowLessServiceForm", Model.Car, new { @class = "btn btn-primary", @style = "color: white; text-decoration:none" })</tr>
+
     </table>
-    @*@Html.ActionLink("Back To List", "CustAndCarForm", "Customer",Model.customer, new { @class = "btn btn-success", style = "color: white; text-decoration:none" })*@
+
+</div>
+@*@Html.ActionLink("Back To List", "CustAndCarForm", "Customer",Model.customer, new { @class = "btn btn-success", style = "color: white; text-decoration:none" })*@
 
 

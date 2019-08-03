@@ -53,12 +53,21 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -184,11 +193,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\CustomersController.cs" />
+    <Compile Include="Api\ServiceTypesController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CarController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
@@ -198,14 +210,58 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="GlobalVariables.cs" />
     <Compile Include="Migrations\201907201229327_AllInOne.cs" />
     <Compile Include="Migrations\201907201229327_AllInOne.Designer.cs">
       <DependentUpon>201907201229327_AllInOne.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201907290932357_newmigration.cs" />
+    <Compile Include="Migrations\201907290932357_newmigration.Designer.cs">
+      <DependentUpon>201907290932357_newmigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907291049388_ValidationMigration.cs" />
+    <Compile Include="Migrations\201907291049388_ValidationMigration.Designer.cs">
+      <DependentUpon>201907291049388_ValidationMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907291232157_ValidationMigration1.cs" />
+    <Compile Include="Migrations\201907291232157_ValidationMigration1.Designer.cs">
+      <DependentUpon>201907291232157_ValidationMigration1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907300401453_servicevalidation.cs" />
+    <Compile Include="Migrations\201907300401453_servicevalidation.Designer.cs">
+      <DependentUpon>201907300401453_servicevalidation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907311145206_authmigration.cs" />
+    <Compile Include="Migrations\201907311145206_authmigration.Designer.cs">
+      <DependentUpon>201907311145206_authmigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907311157259_authmigration1.cs" />
+    <Compile Include="Migrations\201907311157259_authmigration1.Designer.cs">
+      <DependentUpon>201907311157259_authmigration1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907311212335_authmigration2.cs" />
+    <Compile Include="Migrations\201907311212335_authmigration2.Designer.cs">
+      <DependentUpon>201907311212335_authmigration2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907311325309_authmigration5.cs" />
+    <Compile Include="Migrations\201907311325309_authmigration5.Designer.cs">
+      <DependentUpon>201907311325309_authmigration5.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908011442410_ValidationOnEmail.cs" />
+    <Compile Include="Migrations\201908011442410_ValidationOnEmail.Designer.cs">
+      <DependentUpon>201908011442410_ValidationOnEmail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908020458538_queryForCascadeDeleteEmptyMigration.cs" />
+    <Compile Include="Migrations\201908020458538_queryForCascadeDeleteEmptyMigration.Designer.cs">
+      <DependentUpon>201908020458538_queryForCascadeDeleteEmptyMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908020507517_queryForCascadeDeleteEmptyMigration1.cs" />
+    <Compile Include="Migrations\201908020507517_queryForCascadeDeleteEmptyMigration1.Designer.cs">
+      <DependentUpon>201908020507517_queryForCascadeDeleteEmptyMigration1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Car.cs" />
-    <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Role.cs" />
@@ -216,11 +272,14 @@
     <Compile Include="ViewModel\CarAndServiceViewModel.cs" />
     <Compile Include="ViewModel\NewCustomerViewModel.cs" />
     <Compile Include="ViewModel\SearchBarViewModel.cs" />
+    <Compile Include="ViewModel\ServiceTypeViewModel.cs" />
     <Compile Include="ViewModel\SingleCarViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bgImage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\customerBgImage.css" />
     <Content Include="Content\Validation.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -283,9 +342,12 @@
     <Content Include="Views\Car\EditForm.cshtml" />
     <Content Include="Views\Car\AddNewServices.cshtml" />
     <Content Include="Views\ServiceType\Index.cshtml" />
+    <Content Include="Views\Car\ShowLessServiceForm.cshtml" />
+    <Content Include="Views\Customer\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Images\" />
     <Folder Include="Views\Service\" />
   </ItemGroup>
   <ItemGroup>
@@ -304,6 +366,39 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201907201229327_AllInOne.resx">
       <DependentUpon>201907201229327_AllInOne.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907290932357_newmigration.resx">
+      <DependentUpon>201907290932357_newmigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907291049388_ValidationMigration.resx">
+      <DependentUpon>201907291049388_ValidationMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907291232157_ValidationMigration1.resx">
+      <DependentUpon>201907291232157_ValidationMigration1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907300401453_servicevalidation.resx">
+      <DependentUpon>201907300401453_servicevalidation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907311145206_authmigration.resx">
+      <DependentUpon>201907311145206_authmigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907311157259_authmigration1.resx">
+      <DependentUpon>201907311157259_authmigration1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907311212335_authmigration2.resx">
+      <DependentUpon>201907311212335_authmigration2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907311325309_authmigration5.resx">
+      <DependentUpon>201907311325309_authmigration5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908011442410_ValidationOnEmail.resx">
+      <DependentUpon>201908011442410_ValidationOnEmail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908020458538_queryForCascadeDeleteEmptyMigration.resx">
+      <DependentUpon>201908020458538_queryForCascadeDeleteEmptyMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908020507517_queryForCascadeDeleteEmptyMigration1.resx">
+      <DependentUpon>201908020507517_queryForCascadeDeleteEmptyMigration1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

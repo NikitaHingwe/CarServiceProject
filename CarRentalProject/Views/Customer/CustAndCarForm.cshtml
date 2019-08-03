@@ -3,31 +3,32 @@
     ViewBag.Title = "CustAndCarForm";
 }
 
-<h3>Car Records for Customer</h3>
-@Html.ActionLink("Add Car", "CarForm", "Car", Model.Customer, new { @class = "btn btn-primary", @style = "color: white; text-decoration:none" })
+<div class="container">
+    <h2 style="color:white; font-family:'Times New Roman', Times, serif">Car Records for Customer</h2>
 
-<div>
-    <br />
-    <table class="table">
-        <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Phone Number</th>
-            <th>Email</th>
-        </tr>
-        <tr>
-            <td>@Model.Customer.FirstName</td>
-            <td>@Model.Customer.LastName</td>
-            <td>@Model.Customer.PhoneNumber</td>
-            <td>@Model.Customer.Email</td>
-        </tr>
-    </table>
-    <hr />
-    <br />
-    <br />
-</div>
+    @Html.ActionLink("Add Car", "CarForm", "Car", Model.ApplicationUser, new { @class = "btn btn-primary", @style = "color: white; text-decoration:none" })
 
-    <table class="table">
+    <div>
+        <br />
+        <table class="table table-hover" style="background-color:aliceblue; font-family:'Times New Roman', Times, serif">
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+            </tr>
+            <tr>
+                <td>@Model.ApplicationUser.FirstName</td>
+                <td>@Model.ApplicationUser.LastName</td>
+                <td>@Model.ApplicationUser.PhoneNumber</td>
+                <td>@Model.ApplicationUser.Email</td>
+            </tr>
+        </table>
+        <br />
+        <br />
+    </div>
+
+    <table class="table table-hover" style="background-color:aliceblue; font-family:'Times New Roman', Times, serif">
         <tr>
             <th>VIN</th>
             <th>Make</th>
@@ -35,25 +36,26 @@
             <th>Style</th>
             <th>Color</th>
             <th></th>
-       
+
         </tr>
         @foreach (var c in Model.Cars)
         {
-            if (c.CustomerId == Model.Customer.Id)
+            if (c.UserId == Model.ApplicationUser.Id)
             {
-            <tr>
-                <td>@c.VIN</td>
-                <td>@c.Make</td>
-                <td>@c.Model</td>
-                <td>@c.Style</td>
-                <td>@c.Color</td>
-                <td class="col-md-4">
-                    @Html.ActionLink("+ADD New Service", "AddNewServices", "Car", c, new { @class = "btn btn-primary", @style = "color: white; text-decoration:none" })
-                    @Html.ActionLink("Edit", "EditForm", "Car", c, new { @class = "btn btn-success", @style = "color: white; text-decoration:none" })
-                    @Html.ActionLink("Delete", "Delete", "Car", new { c.Id }, new { @class = "btn btn-danger", @style = "color: white; text-decoration:none" })
-                </td>
-            </tr>
+                <tr>
+                    <td>@c.VIN</td>
+                    <td>@c.Make</td>
+                    <td>@c.Model</td>
+                    <td>@c.Style</td>
+                    <td>@c.Color</td>
+                    <td class="col-md-4">
+                        @Html.ActionLink("+ADD New Service", "AddNewServices", "Car", c, new { @class = "btn btn-primary", @style = "color: white; text-decoration:none" })
+                        @Html.ActionLink("Edit", "EditForm", "Car", c, new { @class = "btn btn-success", @style = "color: white; text-decoration:none" })
+                        @Html.ActionLink("Delete", "Delete", "Car", new { c.Id }, new { @class = "btn btn-danger", @style = "color: white; text-decoration:none" })
+                    </td>
+                </tr>
             }
         }
 
     </table>
+</div>

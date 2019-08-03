@@ -10,6 +10,6 @@ namespace CarRentalProject.ViewModel
     {
         public Car Car { get; set; }
 
-        public Customer Customer { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }

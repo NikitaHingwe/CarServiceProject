@@ -23,11 +23,11 @@ namespace CarRentalProject.Controllers
             return View();
         }
 
-        public ActionResult CarForm(Customer customer)
+        public ActionResult CarForm(ApplicationUser applicationUser)
         {
             var viewModel = new SingleCarViewModel
             {
-                Customer = customer
+                ApplicationUser = applicationUser
             };
 
             return View(viewModel);
@@ -37,22 +37,29 @@ namespace CarRentalProject.Controllers
 
         public ActionResult Save(SingleCarViewModel viewModel)
         {
-            viewModel.Car.CustomerId = viewModel.Customer.Id;
-            var customer = _context.Customers.Find(viewModel.Customer.Id);
+            if (!ModelState.IsValid)
+
+            {
+                return View("CarForm", viewModel);
+            }
+
+            viewModel.Car.UserId = viewModel.ApplicationUser.Id;
+            var applicationUser = _context.Users.Find(viewModel.ApplicationUser.Id);
             var car = viewModel.Car;
             _context.Cars.Add(car);
             _context.SaveChanges();
-              
-            return RedirectToAction("CustAndCarForm", "Customer", customer);
+
+            return RedirectToAction("CustAndCarForm", "Customer", applicationUser);
+
         }
 
         public ActionResult EditForm(Car car)
         {
-            var customer = _context.Customers.Find(car.CustomerId);
+            var applicationUser = _context.Users.Find(car.UserId);
             var viewModel = new SingleCarViewModel
             {
                 Car = car,
-                Customer = customer
+                ApplicationUser = applicationUser
             };
 
             return View(viewModel);
@@ -62,55 +69,38 @@ namespace CarRentalProject.Controllers
 
         public ActionResult Edit(Car car)
         {
-            var carInDb = _context.Cars.Find(car.Id);
-            var customer = _context.Customers.Find(carInDb.CustomerId);
-            carInDb.VIN = car.VIN;
-            carInDb.Make = car.Make;
-            carInDb.Model = car.Model;
-            carInDb.Color = car.Color;
-            carInDb.Year = car.Year;
-            carInDb.Miles = car.Miles;
-            _context.SaveChanges();
+            if (!ModelState.IsValid)
+            {
+                var viewModel = new SingleCarViewModel
+                {
+                    Car = car
+                };
+                return View("EditForm", viewModel);
+            }
+            else
+            {
+                var carInDb = _context.Cars.Find(car.Id);
+                var applicationUser = _context.Users.Find(carInDb.UserId);
+                carInDb.VIN = car.VIN;
+                carInDb.Make = car.Make;
+                carInDb.Model = car.Model;
+                carInDb.Color = car.Color;
+                carInDb.Year = car.Year;
+                carInDb.Miles = car.Miles;
 
-            return RedirectToAction("CustAndCarForm", "Customer", customer);
+                _context.SaveChanges();
 
+                return RedirectToAction("CustAndCarForm", "Customer", applicationUser);
+            }
         }
 
         public ActionResult Delete(int id)
         {
             Car car = _context.Cars.Find(id);
-            var customer = _context.Customers.Find(car.CustomerId);
+            var applicationUser = _context.Users.Find(car.UserId);
             _context.Cars.Remove(car);
             _context.SaveChanges();
-            return RedirectToAction("CustAndCarForm","Customer", customer);
-        }
-
-        public ActionResult AddNewServices(Car car)
-        {
-
-            List<Service> service = _context.Services.Where(c => c.CarId == car.Id).ToList();
-            List<ServiceType> serviceType = _context.ServiceTypes.ToList();
-
-            var viewModel = new CarAndServiceViewModel
-            {
-                Car = car,
-                Services = service,
-                ServiceType = serviceType
-            };
-          
-            return View(viewModel);
-        }
-
-        public ActionResult AddServices(CarAndServiceViewModel viewModel)
-        {
-            viewModel.Service.DateAdded = DateTime.Today;
-            viewModel.Service.CarId = viewModel.Car.Id;
-            var car = _context.Cars.Find(viewModel.Car.Id);
-           
-            _context.Services.Add(viewModel.Service);
-            _context.SaveChanges();
-
-            return RedirectToAction("AddNewServices", "Car", car);
+            return RedirectToAction("CustAndCarForm", "Customer", applicationUser);
         }
 
         public ActionResult Delete1(int id)
@@ -120,6 +110,71 @@ namespace CarRentalProject.Controllers
             _context.Services.Remove(service);
             _context.SaveChanges();
             return RedirectToAction("AddNewServices", "Car", car);
+        }
+
+        public ActionResult ShowLessServiceForm(Car car)
+        {
+            var service = _context.Services.Where(c => c.CarId == car.Id).OrderByDescending(c => c.DateAdded).ToList();
+            var serviceList = new List<Service>();
+            int i = 0;
+
+            foreach (var item in service)
+            {
+                i++;
+                if (i <= 5)
+                {
+                    serviceList.Add(item);
+                }
+            }
+
+            var viewModel = new CarAndServiceViewModel
+            {
+                Car = car,
+                Services = serviceList,
+                CheckInteger = i,
+                ServiceType = _context.ServiceTypes.ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        public ActionResult AddNewServices(Car car)
+        {
+            var service = _context.Services.Where(c => c.CarId == car.Id).OrderByDescending(c => c.DateAdded).ToList();
+
+            List<ServiceType> serviceType = _context.ServiceTypes.ToList();
+
+            var viewModel = new CarAndServiceViewModel
+            {
+                Car = car,
+                Services = service,
+                ServiceType = serviceType
+            };
+
+            return View(viewModel);
+        }
+        [HttpPost]
+        public ActionResult AddServices(CarAndServiceViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                viewModel.Service.DateAdded = DateTime.Today;
+                viewModel.Service.CarId = viewModel.Car.Id;
+
+                var car = _context.Cars.Find(viewModel.Car.Id);
+
+                _context.Services.Add(viewModel.Service);
+                _context.SaveChanges();
+
+                return RedirectToAction("AddNewServices", "Car", car);
+            }
+
+            viewModel.Car = _context.Cars.Find(viewModel.Car.Id);
+            viewModel.Services = _context.Services.Where(c => c.CarId == viewModel.Car.Id).OrderByDescending(c => c.DateAdded).ToList();
+            viewModel.ServiceType = _context.ServiceTypes.ToList();
+
+            return View("AddNewServices", viewModel);
+
         }
 
         protected override void Dispose(bool disposing)

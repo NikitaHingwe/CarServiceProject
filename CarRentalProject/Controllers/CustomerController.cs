@@ -1,8 +1,10 @@
 ﻿using CarRentalProject.Models;
 using CarRentalProject.ViewModel;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
 
@@ -16,114 +18,265 @@ namespace CarRentalProject.Controllers
         {
             _context = new ApplicationDbContext();
         }
+
+
         // GET: Customer
-
-        public ActionResult Index(string search = "", string option = "")
+        public ActionResult Index()
         {
-            if (search.Equals(""))
-            {
-                var customers = _context.Customers.ToList();
-                var viewModel = new SearchBarViewModel
-                {
-                    Customers = customers
-                };
-                return View(viewModel);
-            }
-            else
-            {
-                if (option.Equals("Email"))
-                {
-                    var customers = _context.Customers.Where(c => c.Email.Equals(search)).ToList();
-                    var viewModel = new SearchBarViewModel
-                    {
-                        Customers = customers
-                    };
-                    return View(viewModel);
-                }
-
-                else if (option.Equals("PhoneNumber"))
-                {
-                    var searchMobile = Convert.ToDouble(search);
-                    var customers = _context.Customers.Where(c => c.PhoneNumber.Equals(searchMobile)).ToList();
-                    var viewModel = new SearchBarViewModel
-                    {
-                        Customers = customers
-                    };
-                    return View(viewModel);
-                }
-
-                else
-                {
-                    var customers = _context.Customers.Where(c => c.FirstName.Equals(search)).ToList();
-                    var viewModel = new SearchBarViewModel
-                    {
-                        Customers = customers
-                    };
-                    return View(viewModel);
-                }
-            }
+            IEnumerable<ApplicationUser> userList;
+            HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Customers").Result;
+            userList = response.Content.ReadAsAsync<IEnumerable<ApplicationUser>>().Result;
+            return View(userList);
         }
 
-        [Authorize(Roles = Role.Admin)]
 
-        public ActionResult CustForm(Customer customer)
+        //[Authorize(Roles = Role.Admin)]
+        public ActionResult CustForm()
         {
-            var cars = _context.Cars.ToList();
-            var viewModel = new NewCustomerViewModel
-            {
-                Customer = customer,
-                Cars = cars
-            };
-            return View(viewModel);
+            return View();
         }
 
         [HttpPost]
-
-        [Authorize(Roles = Role.Admin)]
-
-        public ActionResult Save(Customer customer)
+        public ActionResult Save(ApplicationUser applicationUser)
         {
+            HttpResponseMessage response = GlobalVariables.WebApiClient.PostAsJsonAsync("Customers", applicationUser).Result;
+            TempData["SuccessMessage"] = "Saved Successfully";
 
-            if (customer.Id == 0)
-                _context.Customers.Add(customer);
-            else
-            {
-                var customerInDb = _context.Customers.Single(c => c.Id == customer.Id);
-                customerInDb.FirstName = customer.FirstName;
-                customerInDb.LastName  = customer.LastName;
-                customerInDb.PhoneNumber = customer.PhoneNumber;
-                customerInDb.Email = customer.Email;
-            }
-            _context.SaveChanges();
-            return RedirectToAction("Index", "Customer");
+            return RedirectToAction("Index", applicationUser);
         }
 
-        [Authorize(Roles = Role.Admin)]
-
-        public ActionResult Delete(int id)
+        public ActionResult Edit(string id)
         {
-            Customer customer = _context.Customers.Find(id);
-            _context.Customers.Remove(customer);
-            _context.SaveChanges();
+            var user = _context.Users.Find(id);
+            return View(user);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(ApplicationUser applicationUser)
+        {
+
+            HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("Customers/", applicationUser).Result;
+            TempData["SuccessMessage"] = "Updated Successfully";
+
+            return RedirectToAction("Index", applicationUser);
+        }
+
+
+        public ActionResult Delete(ApplicationUser applicationUser)
+        {
+            HttpResponseMessage response = GlobalVariables.WebApiClient.DeleteAsync("Customers/" + applicationUser.Id.ToString()).Result;
+            TempData["SuccessMessage"] = "Deleted Successfully";
             return RedirectToAction("Index");
+
+            //using(var client = new HttpClient())
+            //{
+            //    client.BaseAddress = new Uri("http://localhost:51313/api/");
+            //    var deleteTask = client.DeleteAsync("Customers/" + applicationUser.Id.ToString());
+            //    deleteTask.Wait();
+            //    var result = deleteTask.Result;
+            //    if (result.IsSuccessStatusCode)
+            //    {
+            //        return RedirectToAction("Index");
+            //    }
+            //}
+            //return RedirectToAction("Index");
         }
 
-        public ActionResult CustAndCarForm(Customer customer)
+
+        public ActionResult CustAndCarForm1(ApplicationUser applicationUser)
         {
             var cars = _context.Cars.ToList();
-            var cust = _context.Customers.Find(customer.Id);
+            var users = _context.Users.Find(User.Identity.GetUserId());
+
             var viewModel = new NewCustomerViewModel
             {
-                Customer = cust,
+                ApplicationUser = users,
+                Cars = cars
+            };
+            return View("CustAndCarForm", viewModel);
+        }
+
+        public ActionResult CustAndCarForm(ApplicationUser applicationUser)
+        {
+            var cars = _context.Cars.ToList();
+            var users = _context.Users.Find(applicationUser.Id);
+
+            var viewModel = new NewCustomerViewModel
+            {
+                ApplicationUser = users,
                 Cars = cars
             };
             return View(viewModel);
         }
+    }
 
-        protected override void Dispose(bool disposing)
+}
+
+    //public ActionResult Index(string search = "", string option = "")
+    //{
+    //    if (search.Equals(""))
+    //    {
+    //        var customers = _context.Customers.ToList();
+    //        var viewModel = new SearchBarViewModel
+    //        {
+    //            Customers = customers
+    //        };
+    //        return View(viewModel);
+    //    }
+    //    else
+    //    {
+    //        if (option.Equals("Email"))
+    //        {
+    //            var customers = _context.Customers.Where(c => c.Email.Equals(search)).ToList();
+    //            var viewModel = new SearchBarViewModel
+    //            {
+    //                Customers = customers
+    //            };
+    //            return View(viewModel);
+    //        }
+
+    //        else if (option.Equals("PhoneNumber"))
+    //        {
+    //            try
+    //            {
+    //                var searchMobile = Convert.ToDouble(search);
+    //                var customers = _context.Customers.Where(c => c.PhoneNumber.Equals(searchMobile)).ToList();
+    //                var viewModel = new SearchBarViewModel
+    //                {
+    //                    Customers = customers
+    //                };
+    //                return View(viewModel);
+    //            }
+    //            catch
+    //            {
+    //                var customers = _context.Customers.ToList();
+    //                var viewModel = new SearchBarViewModel
+    //                {
+    //                    Customers = customers,
+    //                    CheckInteger = 1
+    //                };
+    //                return View(viewModel);
+
+    //            }
+    //        }
+
+    //        else
+    //        {
+    //            var customers = _context.Customers.Where(c => c.FirstName.Equals(search)).ToList();
+    //            var viewModel = new SearchBarViewModel
+    //            {
+    //                Customers = customers
+    //            };
+    //            return View(viewModel);
+    //        }
+    //    }
+    //}
+
+    /*
+    public ActionResult CustForm()
+    {
+        return View(applicationUser);
+    }
+
+    [HttpPost]
+
+    public ActionResult Save(SingleCarViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+
         {
-            _context.Dispose();
+            return View("CarForm", viewModel);
         }
 
-    }
-}
+        viewModel.Car.UserId = viewModel.ApplicationUser.Id;
+        var applicationUser = _context.Users.Find(viewModel.ApplicationUser.Id);
+        var car = viewModel.Car;
+        _context.Cars.Add(car);
+        _context.SaveChanges();
+
+        return RedirectToAction("CustAndCarForm", "Customer", applicationUser);
+
+    }*/
+
+    //[HttpPost]
+    //public ActionResult Save(int id = 0)
+    //{
+    //    if (id == 0)
+    //        return View(new Customer());
+    //    else
+    //    {
+    //        HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Customers/" + id.ToString()).Result;
+    //        return View(response.Content.ReadAsAsync<Customer>().Result);
+    //    }
+    //}
+
+    //[HttpPost]
+
+    //public ActionResult Save(Customer customer)
+    //{
+    //    if (!ModelState.IsValid)
+    //    {
+    //        var viewModel = new NewCustomerViewModel
+    //        {
+    //            Customer = customer
+
+    //        };
+    //        return View("CustForm", viewModel);
+    //    }
+    //    if (customer.Id == 0)
+    //        _context.Customers.Add(customer);
+    //    else
+    //    {
+    //        var customerInDb = _context.Customers.Single(c => c.Id == customer.Id);
+    //        customerInDb.FirstName = customer.FirstName;
+    //        customerInDb.LastName  = customer.LastName;
+    //        customerInDb.PhoneNumber = customer.PhoneNumber;
+    //        customerInDb.Email = customer.Email;
+    //    }
+    //    _context.SaveChanges();
+    //    return RedirectToAction("Index", "Customer");
+    //}
+
+
+    //    [Authorize(Roles = Role.Admin)]
+
+    //    public ActionResult Delete(int id)
+    //    {
+    //        Customer customer = _context.Customers.Find(id);
+    //        _context.Customers.Remove(customer);
+    //        _context.SaveChanges();
+    //        return RedirectToAction("Index");
+    //    }
+
+    //    public ActionResult CustAndCarForm(Customer customer)
+    //    {
+    //        var cars = _context.Cars.ToList();
+    //        var cust = _context.Customers.Find(customer.Id);
+    //        var viewModel = new NewCustomerViewModel
+    //        {
+    //            Customer = cust,
+    //            Cars = cars
+    //        };
+    //        return View(viewModel);
+    //    }
+
+    //    protected override void Dispose(bool disposing)
+    //    {
+    //        _context.Dispose();
+    //    }
+
+    //}
+//}
+
+
+
+//<script>
+//$(document).ready(function(){
+//  $("#myInput").on("keyup", function() {
+//            var value = $(this).val().toLowerCase();
+//    $("#myTable tr").filter(function() {
+//      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+//    });
+//        });
+//    });
+//</script>

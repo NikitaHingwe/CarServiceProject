@@ -8,8 +8,8 @@ namespace CarRentalProject.ViewModel
 {
     public class SearchBarViewModel
     {
-        public Customer Customer { get; set; }
-        public IEnumerable<Customer> Customers { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
+        public IEnumerable<ApplicationUser> ApplicationUsers { get; set; }
         public int? CheckInteger { get; set; }
     }
 }

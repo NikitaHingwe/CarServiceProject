@@ -64,6 +64,26 @@ namespace CarRentalProject.Models
 
     public class RegisterViewModel
     {
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "First Name is Mandatory")]
+        [StringLength(20, MinimumLength = 3, ErrorMessage = "First Name Should be min 3 and max 20")]
+        [RegularExpression(@"^([A-Za-z]+)", ErrorMessage = "Enter valid First Name")]
+        public string FirstName { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Last Name is Mandatory")]
+        [RegularExpression(@"^([A-Za-z]+)", ErrorMessage = "Enter valid Last Name")]
+        [StringLength(20, MinimumLength = 3, ErrorMessage = "Last Name Should be min 3 and max 20")]
+        public string LastName { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "City Name is Mandatory")]
+        [RegularExpression(@"^([A-Za-z]+)", ErrorMessage = "Enter valid City Name")]
+        [StringLength(20, MinimumLength = 3, ErrorMessage = "Last Name Should be min 3 and max 20")]
+        public string City { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Phone Number is Mandatory")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Invalid Phone number")]
+        public string PhoneNumber { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
