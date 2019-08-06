@@ -3,6 +3,10 @@
     ViewBag.Title = "CustAndCarForm";
 }
 
+@section custandcarpage {
+    <link href="@Url.Content("~/Content/cust&carImage.css")" rel="stylesheet" />
+}
+
 <div class="container">
     <h2 style="color:white; font-family:'Times New Roman', Times, serif">Car Records for Customer</h2>
 
@@ -50,8 +54,8 @@
                     <td>@c.Color</td>
                     <td class="col-md-4">
                         @Html.ActionLink("+ADD New Service", "AddNewServices", "Car", c, new { @class = "btn btn-primary", @style = "color: white; text-decoration:none" })
-                        @Html.ActionLink("Edit", "EditForm", "Car", c, new { @class = "btn btn-success", @style = "color: white; text-decoration:none" })
-                        @Html.ActionLink("Delete", "Delete", "Car", new { c.Id }, new { @class = "btn btn-danger", @style = "color: white; text-decoration:none" })
+                        @Html.ActionLink(" ", "EditForm", "Car", c, new { @class = "btn btn-success fa fa-edit", @style = "color: white; text-decoration:none" })
+                        @Html.ActionLink(" ", "Delete", "Car", new { c.Id }, new { @class = "btn btn-danger fa fa-trash-o", @style = "color: white; text-decoration:none" })
                     </td>
                 </tr>
             }

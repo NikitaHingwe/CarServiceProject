@@ -3,6 +3,11 @@
     ViewBag.Title = "ShowLessServiceForm";
 }
 
+@section servicepage {
+    <link href="@Url.Content("~/Content/serviceImage.css")" rel="stylesheet" />
+}
+
+
 <div class="container">
 
     <h3 style="color:white; font-family:'Times New Roman', Times, serif">ShowLessServiceForm</h3>
@@ -52,12 +57,12 @@
                     <td>@Html.TextBoxFor(m => m.Service.Price, new { @class = "form-control" })</td>
                     <td>@Html.ValidationMessageFor(m => m.Service.Price)</td>
 
-                    <td>@Html.LabelFor(m => m.Service.ServiceTypeId)</td>
+                    <td>@Html.LabelFor(m => m.Service.ServiceType)</td>
                     <td>
                         @Html.DropDownListFor(m => m.Service.ServiceTypeId,
-                                                new SelectList(Model.ServiceType, "Id", "Name"),
-                                                "Select Service Type",
-                                                new { @class = "form-control" })
+                                                     new SelectList(Model.ServiceType, "Id", "Name"),
+                                                     "Select Service Type",
+                                                     new { @class = "form-control" })
                     </td>
                     <td>@Html.ValidationMessageFor(m => m.Service.ServiceType)</td>
 
@@ -103,15 +108,14 @@
                 <td>@c.ServiceType.Name</td>
                 @if (c.DateAdded == DateTime.Today)
                 {
-                    <td>@Html.ActionLink("Delete", "Delete1", new { c.Id }, new { @class = "btn btn-danger", @style = "color: white; text-decoration:none" })</td>
+                    <td>@Html.ActionLink(" ", "Delete1", new { c.Id }, new { @class = "btn btn-danger fa fa-trash-o", @style = "color: white" })</td>
                 }
             </tr>
         }
+
+        <tr>@Html.ActionLink("Show Less", "AddNewServices", Model.Car, new { @class = "btn btn-primary", @style = "color: white; text-decoration:none" })</tr>
        
-        @if (Model.CheckInteger > 5)
-        {
-            <tr>@Html.ActionLink("Show All", "AddNewServices", Model.Car, new { @class = "btn btn-primary", @style = "color: white; text-decoration:none" })</tr>
-        }
+        
     </table>
 
 </div>

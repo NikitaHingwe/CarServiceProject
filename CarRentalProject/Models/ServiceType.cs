@@ -10,7 +10,7 @@ namespace CarRentalProject.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Enter Service Name")]
         public string Name { get; set; }
     }
 }

@@ -21,12 +21,72 @@ namespace CarRentalProject.Controllers
 
 
         // GET: Customer
-        public ActionResult Index()
+        //public ActionResult Index()
+        //{
+        //    HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Customers").Result;
+        //    var userList = response.Content.ReadAsAsync<IEnumerable<ApplicationUser>>().Result;
+        //    return View(userList);
+        //}
+
+        public ActionResult Index(string search = "", string option = "")
         {
-            IEnumerable<ApplicationUser> userList;
-            HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Customers").Result;
-            userList = response.Content.ReadAsAsync<IEnumerable<ApplicationUser>>().Result;
-            return View(userList);
+            if (search.Equals(""))
+            {
+                HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Customers").Result;
+                var userList = response.Content.ReadAsAsync<IEnumerable<ApplicationUser>>().Result;
+                var viewModel = new SearchBarViewModel
+                {
+                    ApplicationUsers = userList
+                };
+                return View(viewModel);
+            }
+            else
+            {
+                if (option.Equals("Email"))
+                {
+                    var users = _context.Users.Where(c => c.Email.Equals(search)).ToList();
+                    var viewModel = new SearchBarViewModel
+                    {
+                        ApplicationUsers = users
+                    };
+                    return View(viewModel);
+                }
+
+                else if (option.Equals("PhoneNumber"))
+                {
+                    try
+                    {
+                        var searchMobile = Convert.ToDouble(search);
+                        var users = _context.Users.Where(c => c.PhoneNumber.Equals(searchMobile)).ToList();
+                        var viewModel = new SearchBarViewModel
+                        {
+                            ApplicationUsers = users
+                        };
+                        return View(viewModel);
+                    }
+                    catch
+                    {
+                        var users = _context.Users.ToList();
+                        var viewModel = new SearchBarViewModel
+                        {
+                            ApplicationUsers = users,
+                            CheckInteger = 1
+                        };
+                        return View(viewModel);
+
+                    }
+                }
+
+                else
+                {
+                    var users = _context.Users.Where(c => c.FirstName.Equals(search)).ToList();
+                    var viewModel = new SearchBarViewModel
+                    {
+                        ApplicationUsers = users
+                    };
+                    return View(viewModel);
+                }
+            }
         }
 
 
@@ -109,163 +169,103 @@ namespace CarRentalProject.Controllers
             return View(viewModel);
         }
     }
-
 }
 
-    //public ActionResult Index(string search = "", string option = "")
-    //{
-    //    if (search.Equals(""))
-    //    {
-    //        var customers = _context.Customers.ToList();
-    //        var viewModel = new SearchBarViewModel
-    //        {
-    //            Customers = customers
-    //        };
-    //        return View(viewModel);
-    //    }
-    //    else
-    //    {
-    //        if (option.Equals("Email"))
-    //        {
-    //            var customers = _context.Customers.Where(c => c.Email.Equals(search)).ToList();
-    //            var viewModel = new SearchBarViewModel
-    //            {
-    //                Customers = customers
-    //            };
-    //            return View(viewModel);
-    //        }
 
-    //        else if (option.Equals("PhoneNumber"))
-    //        {
-    //            try
-    //            {
-    //                var searchMobile = Convert.ToDouble(search);
-    //                var customers = _context.Customers.Where(c => c.PhoneNumber.Equals(searchMobile)).ToList();
-    //                var viewModel = new SearchBarViewModel
-    //                {
-    //                    Customers = customers
-    //                };
-    //                return View(viewModel);
-    //            }
-    //            catch
-    //            {
-    //                var customers = _context.Customers.ToList();
-    //                var viewModel = new SearchBarViewModel
-    //                {
-    //                    Customers = customers,
-    //                    CheckInteger = 1
-    //                };
-    //                return View(viewModel);
+/*
+public ActionResult CustForm()
+{
+    return View(applicationUser);
+}
 
-    //            }
-    //        }
+[HttpPost]
 
-    //        else
-    //        {
-    //            var customers = _context.Customers.Where(c => c.FirstName.Equals(search)).ToList();
-    //            var viewModel = new SearchBarViewModel
-    //            {
-    //                Customers = customers
-    //            };
-    //            return View(viewModel);
-    //        }
-    //    }
-    //}
+public ActionResult Save(SingleCarViewModel viewModel)
+{
+    if (!ModelState.IsValid)
 
-    /*
-    public ActionResult CustForm()
     {
-        return View(applicationUser);
+        return View("CarForm", viewModel);
     }
 
-    [HttpPost]
+    viewModel.Car.UserId = viewModel.ApplicationUser.Id;
+    var applicationUser = _context.Users.Find(viewModel.ApplicationUser.Id);
+    var car = viewModel.Car;
+    _context.Cars.Add(car);
+    _context.SaveChanges();
 
-    public ActionResult Save(SingleCarViewModel viewModel)
-    {
-        if (!ModelState.IsValid)
+    return RedirectToAction("CustAndCarForm", "Customer", applicationUser);
 
-        {
-            return View("CarForm", viewModel);
-        }
+}*/
 
-        viewModel.Car.UserId = viewModel.ApplicationUser.Id;
-        var applicationUser = _context.Users.Find(viewModel.ApplicationUser.Id);
-        var car = viewModel.Car;
-        _context.Cars.Add(car);
-        _context.SaveChanges();
+//[HttpPost]
+//public ActionResult Save(int id = 0)
+//{
+//    if (id == 0)
+//        return View(new Customer());
+//    else
+//    {
+//        HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Customers/" + id.ToString()).Result;
+//        return View(response.Content.ReadAsAsync<Customer>().Result);
+//    }
+//}
 
-        return RedirectToAction("CustAndCarForm", "Customer", applicationUser);
+//[HttpPost]
 
-    }*/
+//public ActionResult Save(Customer customer)
+//{
+//    if (!ModelState.IsValid)
+//    {
+//        var viewModel = new NewCustomerViewModel
+//        {
+//            Customer = customer
 
-    //[HttpPost]
-    //public ActionResult Save(int id = 0)
-    //{
-    //    if (id == 0)
-    //        return View(new Customer());
-    //    else
-    //    {
-    //        HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Customers/" + id.ToString()).Result;
-    //        return View(response.Content.ReadAsAsync<Customer>().Result);
-    //    }
-    //}
-
-    //[HttpPost]
-
-    //public ActionResult Save(Customer customer)
-    //{
-    //    if (!ModelState.IsValid)
-    //    {
-    //        var viewModel = new NewCustomerViewModel
-    //        {
-    //            Customer = customer
-
-    //        };
-    //        return View("CustForm", viewModel);
-    //    }
-    //    if (customer.Id == 0)
-    //        _context.Customers.Add(customer);
-    //    else
-    //    {
-    //        var customerInDb = _context.Customers.Single(c => c.Id == customer.Id);
-    //        customerInDb.FirstName = customer.FirstName;
-    //        customerInDb.LastName  = customer.LastName;
-    //        customerInDb.PhoneNumber = customer.PhoneNumber;
-    //        customerInDb.Email = customer.Email;
-    //    }
-    //    _context.SaveChanges();
-    //    return RedirectToAction("Index", "Customer");
-    //}
+//        };
+//        return View("CustForm", viewModel);
+//    }
+//    if (customer.Id == 0)
+//        _context.Customers.Add(customer);
+//    else
+//    {
+//        var customerInDb = _context.Customers.Single(c => c.Id == customer.Id);
+//        customerInDb.FirstName = customer.FirstName;
+//        customerInDb.LastName  = customer.LastName;
+//        customerInDb.PhoneNumber = customer.PhoneNumber;
+//        customerInDb.Email = customer.Email;
+//    }
+//    _context.SaveChanges();
+//    return RedirectToAction("Index", "Customer");
+//}
 
 
-    //    [Authorize(Roles = Role.Admin)]
+//    [Authorize(Roles = Role.Admin)]
 
-    //    public ActionResult Delete(int id)
-    //    {
-    //        Customer customer = _context.Customers.Find(id);
-    //        _context.Customers.Remove(customer);
-    //        _context.SaveChanges();
-    //        return RedirectToAction("Index");
-    //    }
+//    public ActionResult Delete(int id)
+//    {
+//        Customer customer = _context.Customers.Find(id);
+//        _context.Customers.Remove(customer);
+//        _context.SaveChanges();
+//        return RedirectToAction("Index");
+//    }
 
-    //    public ActionResult CustAndCarForm(Customer customer)
-    //    {
-    //        var cars = _context.Cars.ToList();
-    //        var cust = _context.Customers.Find(customer.Id);
-    //        var viewModel = new NewCustomerViewModel
-    //        {
-    //            Customer = cust,
-    //            Cars = cars
-    //        };
-    //        return View(viewModel);
-    //    }
+//    public ActionResult CustAndCarForm(Customer customer)
+//    {
+//        var cars = _context.Cars.ToList();
+//        var cust = _context.Customers.Find(customer.Id);
+//        var viewModel = new NewCustomerViewModel
+//        {
+//            Customer = cust,
+//            Cars = cars
+//        };
+//        return View(viewModel);
+//    }
 
-    //    protected override void Dispose(bool disposing)
-    //    {
-    //        _context.Dispose();
-    //    }
+//    protected override void Dispose(bool disposing)
+//    {
+//        _context.Dispose();
+//    }
 
-    //}
+//}
 //}
 
 
