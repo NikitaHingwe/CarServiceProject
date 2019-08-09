@@ -28,6 +28,18 @@ namespace CarRentalProject.Api
             return _context.Users.ToList();
         }
 
+        // GET api/Customer/1
+        [ResponseType(typeof(ApplicationUser))]
+        public IHttpActionResult GetCustomer(string id)
+        {
+            ApplicationUser applicationUser = _context.Users.Find(id);
+            if (applicationUser == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(applicationUser);
+        }
 
         //POST api/Customer
         //[ResponseType(typeof(ApplicationUser))]
@@ -43,20 +55,6 @@ namespace CarRentalProject.Api
             return Ok(applicationUser);
 
             // return CreatedAtRoute("Customer", new { id = applicationUser.Id }, applicationUser);
-        }
-
-
-        // GET api/Customer/
-        [ResponseType(typeof(ApplicationUser))]
-        public IHttpActionResult GetCustomer(string id)
-        {
-            ApplicationUser applicationUser = _context.Users.Find(id);
-            if (applicationUser == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(applicationUser);
         }
 
 

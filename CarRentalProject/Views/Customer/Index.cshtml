@@ -1,4 +1,5 @@
 ﻿@model CarRentalProject.ViewModel.SearchBarViewModel
+@using Microsoft.AspNet.Identity;
 @*model IEnumerable<CarRentalProject.Models.ApplicationUser>*@
 @{
     ViewBag.Title = "Index";
@@ -7,6 +8,8 @@
 @section CustomerPage {
     <link href="~/Content/homebg.css" rel="stylesheet" />
 }
+
+<br />
 
 <div class="container">
     <div style=" width:150px">
@@ -50,12 +53,12 @@
 
 @if (Model.CheckInteger == 1)
     {
-        <h4 style="color:white; font-family:'Times New Roman', Times, serif">Invaild Input</h4>
+        <h2 style="color:white; font-family:'Times New Roman', Times, serif">Invaild Input</h2>
     }
 
 else if (!Model.ApplicationUsers.Any())
     {
-        <h4 style="color:white; font-family:'Times New Roman', Times, serif">No Customer Found</h4>
+        <h2 style="color:white; font-family:'Times New Roman', Times, serif">No Customer Found</h2>
     }
 
 else
@@ -72,18 +75,25 @@ else
             </tr>
             @foreach (var c in Model.ApplicationUsers)
             {
-                <tr>
-                    <td>@c.FirstName</td>
-                    <td>@c.LastName</td>
-                    <td>@c.PhoneNumber</td>
-                    <td>@c.Email</td>
-                    <td>@c.City</td>
-                    <td class="col-md-3">
-                        @Html.ActionLink(" ", "CustAndCarForm", c, new { @class = "btn btn-primary fa fa-car", @style = "color: white" })
-                        @Html.ActionLink(" ", "Edit", new { c.Id }, new { @class = "btn btn-success fa fa-edit", style = "color: white" })
-                        @Html.ActionLink(" ", "Delete", c, new { @class = "btn btn-danger fa fa-trash-o", @style = "color: white" })
-                    </td>
-                </tr>
+                if (User.Identity.GetUserId() == c.Id)
+                {
+
+                }
+                else
+                {
+                    <tr>
+                        <td>@c.FirstName</td>
+                        <td>@c.LastName</td>
+                        <td>@c.PhoneNumber</td>
+                        <td>@c.Email</td>
+                        <td>@c.City</td>
+                        <td class="col-md-3">
+                            @Html.ActionLink(" ", "CustAndCarForm", c, new { @class = "btn btn-primary fa fa-car", @style = "color: white" })
+                            @Html.ActionLink(" ", "Edit", new { c.Id }, new { @class = "btn btn-success fa fa-edit", style = "color: white" })
+                            @Html.ActionLink(" ", "Delete", c, new { @class = "btn btn-danger fa fa-trash-o", @style = "color: white" })
+                        </td>
+                    </tr>
+                }
             }
         </table>
     </div>

@@ -14,9 +14,6 @@
         }
     </style>
 
-
-
-
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @RenderSection("CustomerPage", required: false)
@@ -24,18 +21,24 @@
     @RenderSection("CustAndCarPage", required: false)
     @RenderSection("ServicePage", required: false)
     @RenderSection("HomePage", required: false)
+
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div >
+    <div class="navbar navbar-inverse navbar-fixed-top" style="height:80px; background:rgba(0, 0, 0, 1)">
+        <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <img src="../Images/logo.jpg" style="width:60px; height:60px; border-radius:60px; float:left">
-                @Html.ActionLink("K&K AUTO SERVICE ", "Index", "Home", new { area = "" }, new { @class = "navbar-brand"})
+
+                <a href="@Url.Action( "Index", "Home")">
+                    <img src="~/Images/CarLogo.png" style="width:180px; height:80px; float:left">
+                </a>
+
+                @*@Html.ActionLink("K&K AUTO SERVICE", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
+
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">

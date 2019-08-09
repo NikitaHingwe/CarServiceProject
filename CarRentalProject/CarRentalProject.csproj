@@ -193,7 +193,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\CarsController.cs" />
     <Compile Include="Api\CustomersController.cs" />
+    <Compile Include="Api\ServiceController.cs" />
     <Compile Include="Api\ServiceTypesController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />

@@ -54,27 +54,27 @@ namespace CarRentalProject.Controllers
 
                 else if (option.Equals("PhoneNumber"))
                 {
-                    try
-                    {
-                        var searchMobile = Convert.ToDouble(search);
-                        var users = _context.Users.Where(c => c.PhoneNumber.Equals(searchMobile)).ToList();
+                    //try
+                    //{
+                        //var searchMobile = Convert.ToDouble(search);
+                        var users = _context.Users.Where(c => c.PhoneNumber.Equals(search)).ToList();
                         var viewModel = new SearchBarViewModel
                         {
                             ApplicationUsers = users
                         };
                         return View(viewModel);
-                    }
-                    catch
-                    {
-                        var users = _context.Users.ToList();
-                        var viewModel = new SearchBarViewModel
-                        {
-                            ApplicationUsers = users,
-                            CheckInteger = 1
-                        };
-                        return View(viewModel);
+                    //}
+                    //catch
+                    //{
+                    //    var users = _context.Users.ToList();
+                    //    var viewModel = new SearchBarViewModel
+                    //    {
+                    //        ApplicationUsers = users,
+                    //        CheckInteger = 1
+                    //    };
+                    //    return View(viewModel);
 
-                    }
+                    //}
                 }
 
                 else
@@ -105,13 +105,16 @@ namespace CarRentalProject.Controllers
             return RedirectToAction("Index", applicationUser);
         }
 
+
         public ActionResult Edit(string id)
         {
-            var user = _context.Users.Find(id);
+            HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Customers/" + id.ToString()).Result;
+            var user = response.Content.ReadAsAsync<ApplicationUser>().Result;
+            //var user = _context.Users.Find(id);
             return View(user);
         }
 
-        [HttpPost]
+        //[HttpPost]
         public ActionResult Edit(ApplicationUser applicationUser)
         {
 
@@ -145,8 +148,12 @@ namespace CarRentalProject.Controllers
 
         public ActionResult CustAndCarForm1(ApplicationUser applicationUser)
         {
-            var cars = _context.Cars.ToList();
-            var users = _context.Users.Find(User.Identity.GetUserId());
+            HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Cars").Result;
+            var cars = response.Content.ReadAsAsync<IEnumerable<Car>>().Result;
+            //var cars = _context.Cars.ToList();
+            HttpResponseMessage response1 = GlobalVariables.WebApiClient.GetAsync("Customers/" + User.Identity.GetUserId().ToString()).Result;
+            var users = response1.Content.ReadAsAsync<ApplicationUser>().Result;
+            //var users = _context.Users.Find(User.Identity.GetUserId());
 
             var viewModel = new NewCustomerViewModel
             {
@@ -158,8 +165,12 @@ namespace CarRentalProject.Controllers
 
         public ActionResult CustAndCarForm(ApplicationUser applicationUser)
         {
-            var cars = _context.Cars.ToList();
-            var users = _context.Users.Find(applicationUser.Id);
+            HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Cars").Result;
+            var cars = response.Content.ReadAsAsync<IEnumerable<Car>>().Result;
+            //var cars = _context.Cars.ToList();
+            HttpResponseMessage response1 = GlobalVariables.WebApiClient.GetAsync("Customers/" + applicationUser.Id.ToString()).Result;
+            var users = response1.Content.ReadAsAsync<ApplicationUser>().Result;
+            //var users = _context.Users.Find(applicationUser.Id);
 
             var viewModel = new NewCustomerViewModel
             {

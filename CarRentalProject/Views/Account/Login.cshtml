@@ -8,6 +8,8 @@
     <link href="~/Content/homebg.css" rel="stylesheet" />
 }
 
+<br />
+
 <div class="container">
     <h2 style="color:white; font-family:'Times New Roman', Times, serif">@ViewBag.Title.</h2>
     <div class="row" style="margin-top: 40px">
@@ -18,7 +20,7 @@
                     @Html.AntiForgeryToken()
                     <h4 style="font-family:'Times New Roman', Times, serif">Use a local account to log in.</h4>
                     <hr />
-                    @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="form-group">
                         @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
                         <div class="col-md-10">

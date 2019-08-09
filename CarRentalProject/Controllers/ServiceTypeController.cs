@@ -11,12 +11,12 @@ namespace CarRentalProject.Controllers
 {
     public class ServiceTypeController : Controller
     {
-        ApplicationDbContext _context;
+        //ApplicationDbContext _context;
 
-        public ServiceTypeController()
-        {
-            _context = new ApplicationDbContext();
-        }
+        //public ServiceTypeController()
+        //{
+        //    _context = new ApplicationDbContext();
+        //}
 
         // GET: Customer
         public ActionResult Index()
