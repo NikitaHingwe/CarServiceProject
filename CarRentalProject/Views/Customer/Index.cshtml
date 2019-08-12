@@ -89,7 +89,7 @@ else
                         <td>@c.City</td>
                         <td class="col-md-3">
                             @Html.ActionLink(" ", "CustAndCarForm", c, new { @class = "btn btn-primary fa fa-car", @style = "color: white" })
-                            @Html.ActionLink(" ", "Edit", new { c.Id }, new { @class = "btn btn-success fa fa-edit", style = "color: white" })
+                            @Html.ActionLink(" ", "Edit","Customer", c, new { @class = "btn btn-success fa fa-edit", style = "color: white" })
                             @Html.ActionLink(" ", "Delete", c, new { @class = "btn btn-danger fa fa-trash-o", @style = "color: white" })
                         </td>
                     </tr>

@@ -123,11 +123,12 @@ namespace CarRentalProject.Controllers
                 if(v.CarId == car.Id)
                 {
                     pastServices.Add(v);
-                    pastServices.Reverse();
+                    
                 }
-            }            
+            }
+            pastServices.Reverse();
             //var service = _context.Services.Where(c => c.CarId == car.Id).OrderByDescending(c => c.DateAdded).ToList();
-            
+
             HttpResponseMessage response2 = GlobalVariables.WebApiClient.GetAsync("ServiceTypes").Result;
             var serviceType = response2.Content.ReadAsAsync<IEnumerable<ServiceType>>().Result;
 

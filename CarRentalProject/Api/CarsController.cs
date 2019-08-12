@@ -49,6 +49,7 @@ namespace CarRentalProject.Api
                 carInDb.Model = car.Model;
                 carInDb.Color = car.Color;
                 carInDb.Year = car.Year;
+                carInDb.Style = car.Style;
                 carInDb.Miles = car.Miles;
 
                 _context.SaveChanges();

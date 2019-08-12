@@ -106,19 +106,20 @@ namespace CarRentalProject.Controllers
         }
 
 
-        public ActionResult Edit(string id)
+        public ActionResult Edit(ApplicationUser applicationUser)
         {
-            HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Customers/" + id.ToString()).Result;
-            var user = response.Content.ReadAsAsync<ApplicationUser>().Result;
-            //var user = _context.Users.Find(id);
-            return View(user);
+            //HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Customers/" + id.ToString()).Result;
+            //var user = response.Content.ReadAsAsync<ApplicationUser>().Result;
+            ////var user = _context.Users.Find(id);
+
+            return View(applicationUser);
         }
 
         //[HttpPost]
-        public ActionResult Edit(ApplicationUser applicationUser)
+        public ActionResult EditSave(ApplicationUser applicationUser)
         {
 
-            HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("Customers/", applicationUser).Result;
+            HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("Customers", applicationUser).Result;
             TempData["SuccessMessage"] = "Updated Successfully";
 
             return RedirectToAction("Index", applicationUser);
