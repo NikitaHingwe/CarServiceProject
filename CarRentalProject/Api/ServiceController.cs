@@ -23,12 +23,19 @@ namespace CarRentalProject.Api
             return _context.Services.ToList();
         }
 
-        [HttpPost]
-        public IHttpActionResult PostServices(CarAndServiceViewModel viewModel)
+        [HttpGet]
+        public IHttpActionResult GetServices(int? id)
         {
-            _context.Services.Add(viewModel.Service);
+            var service = _context.Services.Find(id);
+            return Ok(service);
+        }
+
+        [HttpPost]
+        public IHttpActionResult PostServices(Service service)
+        {
+            _context.Services.Add(service);
             _context.SaveChanges();
-            return Ok(viewModel);
+            return Ok();
         }
 
         [HttpDelete]
@@ -37,7 +44,7 @@ namespace CarRentalProject.Api
             Service service = _context.Services.Find(id);
             _context.Services.Remove(service);
             _context.SaveChanges();
-            return Ok(service);     
+            return Ok();     
         }
 
         protected override void Dispose(bool disposing)

@@ -113,6 +113,92 @@ namespace CarRentalProject.Controllers
         }
 
 
+        public ActionResult AddNewServices(Car car)
+        {
+            HttpResponseMessage response1 = GlobalVariables.WebApiClient.GetAsync("Service").Result;
+            var services = response1.Content.ReadAsAsync<IEnumerable<Service>>().Result;
+            List<Service> pastServices = new List<Service>();
+            foreach (var v in services)
+            {
+                if(v.CarId == car.Id)
+                {
+                    pastServices.Add(v);
+                    pastServices.Reverse();
+                }
+            }            
+            //var service = _context.Services.Where(c => c.CarId == car.Id).OrderByDescending(c => c.DateAdded).ToList();
+            
+            HttpResponseMessage response2 = GlobalVariables.WebApiClient.GetAsync("ServiceTypes").Result;
+            var serviceType = response2.Content.ReadAsAsync<IEnumerable<ServiceType>>().Result;
+
+            //List<ServiceType> serviceType = _context.ServiceTypes.ToList();
+
+            var viewModel = new CarAndServiceViewModel
+            {
+                Car = car,
+                Services = pastServices,
+                ServiceType = serviceType
+            };
+
+            return View(viewModel);
+        }
+
+
+        [HttpPost]
+        public ActionResult AddServices(CarAndServiceViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                viewModel.Service.DateAdded = DateTime.Today;
+                viewModel.Service.CarId = viewModel.Car.Id;
+
+
+                HttpResponseMessage response1 = GlobalVariables.WebApiClient.GetAsync("Cars/" + viewModel.Car.Id).Result;
+                var car = response1.Content.ReadAsAsync<Car>().Result;
+                //var car = _context.Cars.Find(viewModel.Car.Id);
+
+                HttpResponseMessage response2 = GlobalVariables.WebApiClient.PostAsJsonAsync("Service/", viewModel.Service).Result;
+                
+                //_context.Services.Add(viewModel.Service);
+                //_context.SaveChanges();
+
+                return RedirectToAction("AddNewServices", "Car", car);
+            }
+
+            viewModel.Car = _context.Cars.Find(viewModel.Car.Id);
+            viewModel.Services = _context.Services.Where(c => c.CarId == viewModel.Car.Id).OrderByDescending(c => c.DateAdded).ToList();
+
+            viewModel.ServiceType = _context.ServiceTypes.ToList();
+
+            return View("AddNewServices", viewModel);
+
+        }
+
+        public ActionResult Delete1(Service service)
+        {
+          
+            HttpResponseMessage response2 = GlobalVariables.WebApiClient.GetAsync("Service/" + service.Id).Result;
+            var service1 = response2.Content.ReadAsAsync<Service>().Result;
+
+            HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Cars/" + service1.CarId.ToString()).Result;
+            var car = response.Content.ReadAsAsync<Car>().Result;
+
+            //var car = _context.Cars.Find(service.CarId);
+
+            HttpResponseMessage response1 = GlobalVariables.WebApiClient.DeleteAsync("Service/" + service.Id).Result;
+            //Service service = _context.Services.Find(id);
+
+            //_context.Services.Remove(service);
+            //_context.SaveChanges();
+            return RedirectToAction("AddNewServices", car);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
+
+
         //public ActionResult ShowLessServiceForm(Car car)
         //{
         //    var service = _context.Services.Where(c => c.CarId == car.Id).OrderByDescending(c => c.DateAdded).ToList();
@@ -138,99 +224,5 @@ namespace CarRentalProject.Controllers
 
         //    return View(viewModel);
         //}
-
-        public ActionResult AddNewServices(Car car)
-        {
-            HttpResponseMessage response1 = GlobalVariables.WebApiClient.GetAsync("Service").Result;
-            var services = response1.Content.ReadAsAsync<IEnumerable<Service>>().Result;
-            List<Service> pastServices = new List<Service>();
-            foreach (var v in services)
-            {
-                if(v.CarId == car.Id)
-                {
-                    pastServices.Add(v);
-                    pastServices.Reverse();
-                }
-            }            
-            //var service = _context.Services.Where(c => c.CarId == car.Id).OrderByDescending(c => c.DateAdded).ToList();
-            
-            HttpResponseMessage response2 = GlobalVariables.WebApiClient.GetAsync("ServiceTypes").Result;
-            var serviceType = response2.Content.ReadAsAsync<IEnumerable<ServiceType>>().Result;
-            //List<ServiceType> serviceType = _context.ServiceTypes.ToList();
-
-            var viewModel = new CarAndServiceViewModel
-            {
-                Car = car,
-                Services = pastServices,
-                ServiceType = serviceType
-            };
-
-            return View(viewModel);
-        }
-
-
-        [HttpPost]
-        public ActionResult AddServices(CarAndServiceViewModel viewModel)
-        {
-            if (ModelState.IsValid)
-            {
-                viewModel.Service.DateAdded = DateTime.Today;
-                viewModel.Service.CarId = viewModel.Car.Id;
-
-
-                //HttpResponseMessage response1 = GlobalVariables.WebApiClient.GetAsync("Cars/" + viewModel.Car.Id.ToString()).Result;
-                //var car = response1.Content.ReadAsAsync<Car>().Result;
-
-                var car = _context.Cars.Find(viewModel.Car.Id);
-
-                _context.Services.Add(viewModel.Service);
-                _context.SaveChanges();
-
-                return RedirectToAction("AddNewServices", "Car", car);
-            }
-
-            viewModel.Car = _context.Cars.Find(viewModel.Car.Id);
-            viewModel.Services = _context.Services.Where(c => c.CarId == viewModel.Car.Id).OrderByDescending(c => c.DateAdded).ToList();
-
-            viewModel.ServiceType = _context.ServiceTypes.ToList();
-
-            return View("AddNewServices", viewModel);
-
-        }
-
-        public ActionResult Delete1(Service service)
-        {
-            //Car car = null;
-            //IEnumerable<Car> cars;
-            //HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Cars").Result;
-            //cars = response.Content.ReadAsAsync<IEnumerable<Car>>().Result;
-            //foreach (var item in cars)
-            //{
-            //    if (item.Id == service.CarId)
-            //    {
-            //        car = item;
-            //    }
-            //}
-
-
-            HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Cars/" + service.CarId.ToString()).Result;
-            var car = response.Content.ReadAsAsync<Car>().Result;
-
-            //var car = _context.Cars.Find(service.CarId);
-
-            HttpResponseMessage response1 = GlobalVariables.WebApiClient.DeleteAsync("Service/" + service.Id.ToString()).Result;
-            //Service service = _context.Services.Find(id);
-
-            //_context.Services.Remove(service);
-            //_context.SaveChanges();
-            return RedirectToAction("AddNewServices", car);
-        }
-
-
-
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
     }
 }

@@ -63,9 +63,9 @@
                         <td>@Html.LabelFor(m => m.Service.ServiceType)</td>
                         <td>
                             @Html.DropDownListFor(m => m.Service.ServiceTypeId,
-                                                  new SelectList(Model.ServiceType, "Id", "Name"),
-                                                  "Select Service Type",
-                                                  new { @class = "form-control" })
+                                                       new SelectList(Model.ServiceType, "Id", "Name"),
+                                                       "Select Service Type",
+                                                       new { @class = "form-control" })
                         </td>
                         @*<td>@Html.ValidationMessageFor(m => m.Service.ServiceType)</td>*@
                     </tr>
@@ -104,7 +104,7 @@
             {
                 foreach (var s in Model.ServiceType)
                 {
-                    if(c.ServiceTypeId == s.Id)
+                    if (c.ServiceTypeId == s.Id)
                     {
                         <tr>
                             <td>@c.Miles</td>
@@ -164,19 +164,16 @@
                     }
                 </tr>
             }
-            @if (Model.CheckInteger < 4)
-            {
-                  <tr>@Html.ActionLink("Show All", "ShowLessServiceForm", Model.Car, new { @class = "btn btn-primary", @style = "color: white; text-decoration:none" })</tr>
-            }
-
-            @*<tr>@Html.ActionLink("Show All", "ShowLessServiceForm", Model.Car, new { @class = "btn btn-primary", @style = "color: white; text-decoration:none" })</tr>*@
-
         </table>
     }
-    @Html.ActionLink("Back", "CustAndCarForm", "Customer", Model.ApplicationUser, new { @class = "btn btn-primary", style = "color: white; text-decoration:none" })
+    @*@Html.ActionLink("Back", "CustAndCarForm", "Customer", Model.ApplicationUser, new { @class = "btn btn-primary", style = "color: white; text-decoration:none" })*@
 </div>
 
 
-    
+@*@if (Model.CheckInteger < 4)
+{
+    <tr>@Html.ActionLink("Show All", "ShowLessServiceForm", Model.Car, new { @class = "btn btn-primary", @style = "color: white; text-decoration:none" })</tr>
+}*@
 
+@*<tr>@Html.ActionLink("Show All", "ShowLessServiceForm", Model.Car, new { @class = "btn btn-primary", @style = "color: white; text-decoration:none" })</tr>*@
 
