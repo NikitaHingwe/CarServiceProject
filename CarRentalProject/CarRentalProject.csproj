@@ -285,6 +285,7 @@
     <Content Include="Content\cust&amp;carImage.css" />
     <Content Include="Content\homebg.css" />
     <Content Include="Content\homepage.css" />
+    <Content Include="Content\logoNavBar.css" />
     <Content Include="Content\serviceImage.css" />
     <Content Include="Content\ServiceTypeBgImage.css" />
     <Content Include="Content\Validation.css" />
