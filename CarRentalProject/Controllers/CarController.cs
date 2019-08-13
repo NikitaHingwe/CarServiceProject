@@ -11,12 +11,12 @@ namespace CarRentalProject.Controllers
 {
     public class CarController : Controller
     {
-        ApplicationDbContext _context;
+        //ApplicationDbContext _context;
 
-        public CarController()
-        {
-            _context = new ApplicationDbContext();
-        }
+        //public CarController()
+        //{
+        //    _context = new ApplicationDbContext();
+        //}
 
         // GET: Car
         public ActionResult Index()
@@ -166,10 +166,10 @@ namespace CarRentalProject.Controllers
                 return RedirectToAction("AddNewServices", "Car", car);
             }
 
-            viewModel.Car = _context.Cars.Find(viewModel.Car.Id);
-            viewModel.Services = _context.Services.Where(c => c.CarId == viewModel.Car.Id).OrderByDescending(c => c.DateAdded).ToList();
+            //viewModel.Car = _context.Cars.Find(viewModel.Car.Id);
+            //viewModel.Services = _context.Services.Where(c => c.CarId == viewModel.Car.Id).OrderByDescending(c => c.DateAdded).ToList();
 
-            viewModel.ServiceType = _context.ServiceTypes.ToList();
+            //viewModel.ServiceType = _context.ServiceTypes.ToList();
 
             return View("AddNewServices", viewModel);
 
@@ -194,10 +194,10 @@ namespace CarRentalProject.Controllers
             return RedirectToAction("AddNewServices", car);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    _context.Dispose();
+        //}
 
 
         //public ActionResult ShowLessServiceForm(Car car)
