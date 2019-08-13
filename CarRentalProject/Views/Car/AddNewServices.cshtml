@@ -152,18 +152,25 @@
 
             @foreach (var c in Model.Services)
             {
-                <tr>
-                    <td>@c.Miles</td>
-                    <td>@c.Price</td>
-                    <td>@c.Details</td>
-                    <td>@c.DateAdded.ToShortDateString()</td>
-                    <td>@c.ServiceType.Name</td>
-                    @if (c.DateAdded == DateTime.Today)
+                foreach (var s in Model.ServiceType)
+                {
+                    if (c.ServiceTypeId == s.Id)
                     {
-                        <td>@Html.ActionLink(" ", "Delete1", c, new { @class = "btn btn-danger fa fa-trash-o", @style = "color: white" })</td>
+                        <tr>
+                            <td>@c.Miles</td>
+                            <td>@c.Price</td>
+                            <td>@c.Details</td>
+                            <td>@c.DateAdded.ToShortDateString()</td>
+                            <td>@s.Name</td>
+                            @if (c.DateAdded == DateTime.Today)
+                            {
+                                <td>@Html.ActionLink(" ", "Delete1", new { c.Id }, new { @class = "btn btn-danger fa fa-trash-o", @style = "color: white" })</td>
+                            }
+                        </tr>
                     }
-                </tr>
+                }
             }
+            
         </table>
     }
     @*@Html.ActionLink("Back", "CustAndCarForm", "Customer", Model.ApplicationUser, new { @class = "btn btn-primary", style = "color: white; text-decoration:none" })*@
